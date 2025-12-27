@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Dashboard - Hyderabad Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb,#a18cd1);
+      --card-bg: rgba(255,255,255,0.95);
+      --btn: linear-gradient(135deg,#ff6a00,#ee0979,#00c9ff);
+      --shadow1: 0 10px 25px rgba(0,0,0,.2);
+      --shadow2: 0 18px 40px rgba(0,0,0,.3);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Poppins,sans-serif;
+    }
+
+    body{
+      background:var(--bg);
+      background-size:400% 400%;
+      animation:bgMove 10s infinite alternate;
+      color:#222;
+    }
+
+    @keyframes bgMove{
+      from{background-position:0% 50%}
+      to{background-position:100% 50%}
+    }
+
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:30px 20px 50px;
+    }
+
+    .dashboard-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:25px;
+      padding:18px 22px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.35);
+      box-shadow:var(--shadow1);
+      backdrop-filter:blur(10px);
+    }
+
+    h1{
+      color:#fff;
+      margin:0;
+      font-size:1.8rem;
+      text-shadow:0 4px 10px rgba(0,0,0,.4);
+    }
+
+    .dashboard-header span{
+      color:#fdfdfd;
+      font-size:0.9rem;
+      opacity:.9;
+    }
+
+    .btn-add{
+      background:var(--btn);
+      color:#fff;
+      padding:10px 22px;
+      border:none;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:var(--shadow1);
+      transition:.3s;
+    }
+
+    .btn-add:hover{
+      transform:scale(1.06);
+      box-shadow:var(--shadow2);
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:18px;
+      margin:25px 0 30px;
+    }
+
+    .stat-card{
+      background:var(--card-bg);
+      border-radius:18px;
+      padding:18px 20px;
+      box-shadow:var(--shadow1);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .stat-card::after{
+      content:'';
+      position:absolute;
+      right:0;
+      top:0;
+      height:100%;
+      width:4px;
+      background:linear-gradient(135deg,#0091ff,#00e1ff);
+      opacity:.8;
+    }
+
+    .stat-value{
+      font-size:1.9rem;
+      font-weight:800;
+      background:linear-gradient(135deg,#0091ff,#00e1ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:4px;
+      display:block;
+    }
+
+    .stat-label{
+      font-size:.85rem;
+      color:#555;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+
+    .property-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+      gap:22px;
+    }
+
+    .listing-card{
+      background:var(--card-bg);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:var(--shadow1);
+      display:flex;
+      flex-direction:column;
+      transition:.3s;
+      position:relative;
+    }
+
+    .listing-card:hover{
+      transform:translateY(-5px);
+      box-shadow:var(--shadow2);
+    }
+
+    .image-container{
+      width:100%;
+      height:200px;
+      position:relative;
+      background:#ddd;
+    }
+
+    .image-container img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .status-badge{
+      position:absolute;
+      top:12px;
+      right:12px;
+      padding:5px 11px;
+      border-radius:999px;
+      color:#fff;
+      font-size:.75rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .status-occupied{background:#00b894;}
+    .status-vacant{background:#ff7675;}
+    .status-maintenance{background:#fdcb6e;}
+
+    .content-area{
+      padding:16px 18px 18px;
+      display:flex;
+      flex-direction:column;
+      flex-grow:1;
+    }
+
+    .card-header{
+      margin-bottom:10px;
+    }
+
+    .price-tag{
+      font-size:1.25rem;
+      font-weight:800;
+      background:linear-gradient(135deg,#ff6a00,#ee0979);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      display:block;
+      margin-bottom:4px;
+    }
+
+    .property-title{
+      font-size:1rem;
+      margin:0;
+      color:#333;
+    }
+
+    .data-list{
+      list-style:none;
+      padding:0;
+      margin:10px 0 14px;
+      flex-grow:1;
+    }
+
+    .data-list li{
+      display:flex;
+      justify-content:space-between;
+      padding:6px 0;
+      border-bottom:1px dashed rgba(0,0,0,0.07);
+      font-size:.9rem;
+    }
+
+    .data-list li:last-child{
+      border-bottom:none;
+    }
+
+    .data-label{color:#777;}
+    .data-val{font-weight:600;color:#333;}
+
+    .action-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:auto;
+    }
+
+
+.btn-add{
+  background:#4c5cff;          
+  color:#fff;
+  padding:10px 22px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.25);
+  transition:.3s;
+}
+.btn-add:hover{
+  transform:scale(1.06);
+  box-shadow:0 8px 18px rgba(0,0,0,0.32);
+}
+
+.btn{
+  padding:9px 10px;
+  border-radius:999px;
+  font-size:.85rem;
+  font-weight:600;
+  cursor:pointer;
+  text-align:center;
+  border:1px solid transparent;
+  transition:.25s;
+  white-space:nowrap;
+}
+
+.btn-outline{
+  border:1px solid rgba(255,255,255,0.7);
+  color:#223;
+  background:rgba(255,255,255,0.4);
+}
+.btn-outline:hover{
+  background:rgba(255,255,255,0.85);
+}
+
+.btn-fill{
+  background:#4c5cff;          /* solid primary color */
+  color:#fff;
+  box-shadow:0 5px 12px rgba(0,0,0,0.25);
+}
+.btn-fill:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(0,0,0,0.32);
+}
+
+.btn-tan{
+  background:#00b894;          /* solid secondary color */
+  color:#fff;
+  box-shadow:0 5px 12px rgba(0,0,0,0.25);
+}
+.btn-tan:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(0,0,0,0.32);
+}
+
+
+    .modal{
+      display:none;
+      position:fixed;
+      z-index:1000;
+      left:0;
+      top:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.45);
+      justify-content:center;
+      align-items:center;
+    }
+
+    .modal-content{
+      background:var(--card-bg);
+      border-radius:18px;
+      padding:24px 22px 22px;
+      width:90%;
+      max-width:400px;
+      box-shadow:var(--shadow2);
+      animation:slideDown .3s ease;
+      border:1px solid rgba(255,255,255,0.6);
+      backdrop-filter:blur(10px);
+    }
+
+    @keyframes slideDown{
+      from{transform:translateY(-40px);opacity:0;}
+      to{transform:translateY(0);opacity:1;}
+    }
+
+    .modal h2{
+      margin:0 0 12px;
+      font-size:1.3rem;
+      color:#333;
+    }
+
+    .form-group{
+      margin-bottom:12px;
+    }
+
+    .form-group label{
+      display:block;
+      margin-bottom:4px;
+      font-size:.85rem;
+      color:#555;
+      font-weight:600;
+    }
+
+    .form-group input,
+    .form-group select{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.12);
+      font-size:.95rem;
+      box-sizing:border-box;
+      background:rgba(255,255,255,0.9);
+    }
+
+    .modal-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    @media(max-width:768px){
+      .dashboard-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+      }
+      .action-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <div>
+        <h1>Hyderabad Dashboard</h1>
+        <span>Overview of your portfolio</span>
+      </div>
+      <button class="btn-add" onclick="addNewProperty()">+ Add Property</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-value">8</span>
+        <span class="stat-label">Properties</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">₹ 4.5L</span>
+        <span class="stat-label">Total Revenue</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">2</span>
+        <span class="stat-label">Vacant</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">5</span>
+        <span class="stat-label">Requests</span>
+      </div>
+    </div>
+
+    <div class="property-grid">
+      <!-- your existing listing-cards unchanged (only visual style changed by CSS) -->
+      <!-- 1 -->
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://imagecdn.99acres.com/media1/28619/18/572398833M-1755709194152.webp" alt="Luxury Interior">
+          <span class="status-badge status-occupied">Occupied</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 85,000</span>
+            <h3 class="property-title">Luxury 3BHK - Jubilee Hills, Road No. 10</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Tenant</span><span class="data-val">Mr. Reddy</span></li>
+            <li><span class="data-label">Next Pay</span><span class="data-val">01 July</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-fill" onclick="messageTenant('Mr. Reddy')">Message</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://img.staticmb.com/mbphoto/property/cropped_images/2025/Sep/24/Photo_h470_w1080/81522323_2_hatsAppImage20250714at4.32.35PM_470_1080.jpeg" alt="Villa Exterior">
+          <span class="status-badge status-vacant">Vacant</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 65,000</span>
+            <h3 class="property-title">Green Villa - Gachibowli, Near ORR</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Views</span><span class="data-val">145</span></li>
+            <li><span class="data-label">Posted</span><span class="data-val">3 days ago</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-tan" onclick="markRented()">Mark Rented</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://picsum.photos/id/1076/800/600" alt="Office Space">
+          <span class="status-badge status-maintenance">Maintenance</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 1,20,000</span>
+            <h3 class="property-title">Office Space - Cyber Towers Area, Hitech City</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Contractor</span><span class="data-val">Metro Services</span></li>
+            <li><span class="data-label">Est. End</span><span class="data-val">15 Aug</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-fill" onclick="completeMaintenance()">Finish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://img.staticmb.com/mbimages/project/Photo_h470_w1080/Photo_h310_w462/Project-Photo-5-Reliance-Green-Village-Hyderabad-5039968_618_1000_310_462_470_1080.jpg" alt="Apartment">
+          <span class="status-badge status-occupied">Occupied</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 45,000</span>
+            <h3 class="property-title">2BHK Apartment - Banjara Hills, Road No. 12</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Tenant</span><span class="data-val">Priya S.</span></li>
+            <li><span class="data-label">Lease</span><span class="data-val">11 Months</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-fill" onclick="messageTenant('Priya')">Message</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzae3TrZmqri-vkYL_kgF9ii-GK1FYrIvo1g&s" alt="Family Home">
+          <span class="status-badge status-occupied">Occupied</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 32,000</span>
+            <h3 class="property-title">Family Home - Kondapur, Near Botanical Garden</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Tenant</span><span class="data-val">Verma Family</span></li>
+            <li><span class="data-label">Next Pay</span><span class="data-val">10 July</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-fill" onclick="messageTenant('Mr. Verma')">Message</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://img.staticmb.com/mbimages/project/Photo_h470_w1080/2025/12/23/Project-Photo-21-Shreemukh-Silver-Crest-Hyderabad-5438091_410_1440_470_1080.jpg.webp" alt="Condo">
+          <span class="status-badge status-vacant">Vacant</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 55,000</span>
+            <h3 class="property-title">High Rise Condo - Madhapur, Ayyappa Society</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Views</span><span class="data-val">89</span></li>
+            <li><span class="data-label">Posted</span><span class="data-val">1 week ago</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-tan" onclick="markRented()">Mark Rented</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://img.staticmb.com/mbimages/project/Photo_h470_w1080/2025/12/10/Project-Photo-28-One-Hyderabad-Block-D-Phase-2-Hyderabad-5434535_410_1440_470_1080.jpg.webp" alt="Old House">
+          <span class="status-badge status-maintenance">Maintenance</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 40,000</span>
+            <h3 class="property-title">Heritage Home - Begumpet, Near Airport</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Contractor</span><span class="data-val">City Painters</span></li>
+            <li><span class="data-label">Est. End</span><span class="data-val">30 Sep</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-fill" onclick="completeMaintenance()">Finish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="image-container">
+          <img src="https://i.ytimg.com/vi/rszr3_jex2E/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAWFwXwpBuwOzlhwQdOPft6jTwc3g" alt="Shared Flat">
+          <span class="status-badge status-occupied">Occupied</span>
+        </div>
+        <div class="content-area">
+          <div class="card-header">
+            <span class="price-tag">₹ 22,000</span>
+            <h3 class="property-title">Shared Flat - Manikonda, Lanco Hills Road</h3>
+          </div>
+          <ul class="data-list">
+            <li><span class="data-label">Tenants</span><span class="data-val">IT Employees</span></li>
+            <li><span class="data-label">Lease</span><span class="data-val">Shared</span></li>
+          </ul>
+          <div class="action-grid">
+            <button class="btn btn-outline" onclick="openEditModal(this)">Edit</button>
+            <button class="btn btn-fill" onclick="messageTenant('Group')">Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h2>Edit Property</h2>
+      <div class="form-group">
+        <label for="editTitle">Property Title</label>
+        <input type="text" id="editTitle">
+      </div>
+      <div class="form-group">
+        <label for="editPrice">Rent Amount (₹)</label>
+        <input type="text" id="editPrice">
+      </div>
+      <div class="form-group">
+        <label for="editStatus">Status</label>
+        <select id="editStatus">
+          <option value="occupied">Occupied</option>
+          <option value="vacant">Vacant</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-fill" onclick="saveChanges()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentCard = null;
+
+    const modal = document.getElementById('editModal');
+    const titleInput = document.getElementById('editTitle');
+    const priceInput = document.getElementById('editPrice');
+    const statusInput = document.getElementById('editStatus');
+
+    function addNewProperty(){ alert("Add Property Clicked"); }
+    function messageTenant(name){ alert("Messaging " + name); }
+    function completeMaintenance(){ confirm("Mark maintenance as complete?"); }
+    function markRented(){ confirm("Mark this property as rented?"); }
+
+    function openEditModal(button){
+      currentCard = button.closest('.listing-card');
+      const currentTitle = currentCard.querySelector('.property-title').innerText;
+      const currentPrice = currentCard.querySelector('.price-tag').innerText.replace('₹ ','').replace(',','');
+      const badge = currentCard.querySelector('.status-badge');
+
+      let currentStatus = 'occupied';
+      if(badge.classList.contains('status-vacant')) currentStatus = 'vacant';
+      if(badge.classList.contains('status-maintenance')) currentStatus = 'maintenance';
+
+      titleInput.value = currentTitle;
+      priceInput.value = currentPrice;
+      statusInput.value = currentStatus;
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal(){
+      modal.style.display = 'none';
+      currentCard = null;
+    }
+
+    function saveChanges(){
+      if(!currentCard) return;
+
+      const newTitle = titleInput.value;
+      const newPrice = priceInput.value;
+      const newStatus = statusInput.value;
+
+      currentCard.querySelector('.property-title').innerText = newTitle;
+      currentCard.querySelector('.price-tag').innerText = '₹ ' + newPrice;
+
+      const badge = currentCard.querySelector('.status-badge');
+      badge.className = 'status-badge';
+
+      if(newStatus === 'occupied'){
+        badge.classList.add('status-occupied');
+        badge.innerText = 'Occupied';
+      }else if(newStatus === 'vacant'){
+        badge.classList.add('status-vacant');
+        badge.innerText = 'Vacant';
+      }else{
+        badge.classList.add('status-maintenance');
+        badge.innerText = 'Maintenance';
+      }
+
+      closeModal();
+      alert("Changes Saved Successfully!");
+    }
+
+    window.onclick = function(e){
+      if(e.target === modal){
+        closeModal();
+      }
+    }
+  </script>
+
+</body>
+</html>
